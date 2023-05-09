@@ -8,7 +8,7 @@ import (
 
 func TestTask(t *testing.T) {
 	t.Run("create new empty Task", func(t *testing.T) {
-		createdTask := NewTask("a", "b", RsyncOptions{})
+		createdTask := NewTask("a", "b", RsyncOptions{}, false, "")
 
 		assert.Empty(t, createdTask.Log(), "Task log should return empty string")
 		assert.Empty(t, createdTask.State(), "Task should inited with empty state")

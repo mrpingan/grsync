@@ -199,7 +199,7 @@ type RsyncOptions struct {
 	// ipv6
 	IPv6 bool
 
-	//out-format
+	// out-format
 	OutFormat bool
 }
 
@@ -231,7 +231,7 @@ func (r Rsync) Run() error {
 }
 
 // NewRsync returns task with described options
-func NewRsync(source, destination string, options RsyncOptions) *Rsync {
+func NewRsync(source, destination string, options RsyncOptions, is_su bool, su_user string) *Rsync {
 	arguments := append(getArguments(options), source, destination)
 
 	binaryPath := "rsync"
@@ -239,10 +239,19 @@ func NewRsync(source, destination string, options RsyncOptions) *Rsync {
 		binaryPath = options.RsyncBinaryPath
 	}
 
+	var cmd *exec.Cmd
+
+	if is_su {
+		cmdArgs := append([]string{"-c", binaryPath}, arguments...)
+		cmd = exec.Command("su", su_user, "-c", strings.Join(cmdArgs, " "))
+	} else {
+		cmd = exec.Command(binaryPath, arguments...)
+	}
+
 	return &Rsync{
 		Source:      source,
 		Destination: destination,
-		cmd:         exec.Command(binaryPath, arguments...),
+		cmd:         cmd,
 	}
 }
 
