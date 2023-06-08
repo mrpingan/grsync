@@ -242,7 +242,7 @@ func NewRsync(source, destination string, options RsyncOptions, is_su bool, su_u
 	var cmd *exec.Cmd
 
 	if is_su {
-		cmdArgs := append([]string{"-c", binaryPath}, arguments...)
+		cmdArgs := append([]string{binaryPath}, arguments...)
 		cmd = exec.Command("su", su_user, "-c", strings.Join(cmdArgs, " "))
 	} else {
 		cmd = exec.Command(binaryPath, arguments...)
