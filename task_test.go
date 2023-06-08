@@ -1,6 +1,7 @@
 package grsync
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -38,4 +39,14 @@ func TestTaskSpeedParse(t *testing.T) {
 	const taskInfoString = `0.00kB/s \n 999,999 99%  999.99kB/s    0:00:59 (xfr#9, ir-chk=999/9999)`
 	speed := getTaskSpeed(speedMatcher.ExtractAllStringSubmatch(taskInfoString, 2))
 	assert.Equal(t, "999.99kB/s", speed)
+}
+
+func TestShowCommand(t *testing.T) {
+	t.Run("create new empty Task", func(t *testing.T) {
+		createdTask := NewTask("a", "b", RsyncOptions{}, false, "")
+
+		fmt.Println(createdTask.ShowCommand())
+
+		assert.Equal(t, "rsync --archive --partial --human-readable --progress a b", createdTask.ShowCommand())
+	})
 }
